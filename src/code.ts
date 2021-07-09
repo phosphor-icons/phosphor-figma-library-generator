@@ -37,21 +37,15 @@ figma.ui.onmessage = async ({ type, payload }) => {
         const node = figma.createNodeFromSvg(svg);
         node.name = name;
         node.constrainProportions = true;
-        
-        const group = figma.group(node.children, node);
-        group.name = name;
-        group.expanded = false;
-        group.constrainProportions = true;
-        group.children.forEach((child) => ungroup(child, group));
-        
-        component.appendChild(group);
+        node.children.forEach((child) => ungroup(child, component));
+
         node.remove();
       });
       break;
   }
 };
 
-function ungroup(node: BaseNode, parent: GroupNode) {
+function ungroup(node: BaseNode, parent: ChildrenMixin) {
   if (node.type === "GROUP") {
     node.children.forEach((grandchild) => {
       ungroup(grandchild, parent);
